@@ -210,8 +210,8 @@
         Avec Les Editions Spiritueuses, testez vos connaissances sur le rhum ! : Plongez dans son univers fascinant et découvrez si vous êtes un véritable connaisseur de ce spiritueux légendaire !
     </p>
     <p style="font-weight: bold; color: #CC7722; border: 1px dashed #CC7722; padding: 10px; margin-top: 20px;">
-        ⚠️ RÈGLE DE SCORING : Le score final est pondéré par le temps de réponse. Le temps cible est de **1 minute (60 secondes)**. Si vous dépassez 1 minute, votre Index de Performance sera légèrement pénalisé.
-    </p>
+    ⚠️ RÈGLE DE SCORING : Le score final est pondéré par le temps de réponse. Le temps cible est de **2 minutes (120 secondes)**. Si vous dépassez 2 minutes, votre Index de Performance sera légèrement pénalisé.
+</p>
     <button class="action-btn" onclick="startQuiz()">Commencer le Quiz</button>
 </div>
 
@@ -472,7 +472,7 @@
         const rawPercentage = (score / MAX_SCORE) * 100;
         
         // NOUVEAU TEMPS CIBLE: 60 secondes (1 minute)
-        const TARGET_TIME_SECONDS = 60; 
+        const TARGET_TIME_SECONDS = 120; 
         
         let timeFactor = 1;
         if (timeTakenSeconds > TARGET_TIME_SECONDS) {
@@ -545,6 +545,7 @@
 
 </body>
 </html>
+
 
 
 
