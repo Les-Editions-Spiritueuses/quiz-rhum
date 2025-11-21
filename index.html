@@ -514,64 +514,35 @@
     // -------------------------------------------------------------------
 
     function handlePseudoInput(pseudoValue) {
-        // Si le pseudo est vide ou si le résultat a déjà été envoyé, on ne fait rien.
-        if (pseudoValue.trim().length === 0 || resultSent) {
-            return;
+    const finalResultsDisplay = document.getElementById("final-results-display");
+    
+    // Condition 1 : Le pseudo est vide.
+    if (pseudoValue.trim().length === 0) {
+        // Cacher la zone des résultats si le pseudo est effacé
+        finalResultsDisplay.style.display = "none";
+        // Si l'utilisateur efface le pseudo, on permet un nouvel envoi (au cas où il veuille le remettre)
+        if (resultSent) {
+             // Ceci est une précaution si l'envoi a déjà eu lieu.
+             document.getElementById('send-status').textContent = "";
         }
-
+        return;
+    }
+    
+    // Condition 2 : Le pseudo est renseigné et n'a jamais été envoyé
+    if (!resultSent) {
         // Le pseudo est renseigné, on affiche les résultats et on envoie.
-        document.getElementById("final-results-display").style.display = "block";
+        finalResultsDisplay.style.display = "block";
         sendResult();
     }
-
-    /**
-     * Envoie le résultat (Pseudo, Score sur 30, Temps, et Index Pondéré) au Google Sheet. (MISE À JOUR)
-     */
-    function sendResult() {
-        const pseudo = document.getElementById('pseudo-input').value;
-        const sendStatus = document.getElementById('send-status');
-        
-        // Sécurité contre double-envoi
-        if (resultSent) {
-            sendStatus.textContent = "Résultat déjà enregistré.";
-            return;
-        }
-        
-        // Double vérification (si jamais le trigger oninput n'était pas parfait)
-        if (!pseudo.trim()) {
-            sendStatus.textContent = "Veuillez entrer un pseudo valide.";
-            return;
-        }
-
-        sendStatus.textContent = "Envoi du résultat en cours...";
-        
-        // --- Envoi au Google Sheet via Apps Script ---
-        fetch(GAS_URL, {
-            method: 'POST',
-            mode: 'no-cors', 
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                pseudo: pseudo, 
-                score: score, 
-                time: timeTakenSeconds, 
-                performanceIndex: performanceIndex 
-            })
-        })
-        .then(response => {
-            console.log("Données envoyées à Google Sheet.");
-            resultSent = true; // IMPORTANT : Marquer le résultat comme envoyé
-            sendStatus.textContent = "✅ Résultat enregistré avec succès !";
-            document.getElementById('pseudo-input').disabled = true; // Désactiver la saisie
-        })
-        .catch(error => {
-            console.error('Erreur lors de l\'enregistrement des données:', error);
-            sendStatus.textContent = "❌ Erreur lors de l'enregistrement, veuillez réessayer.";
-            resultSent = false; 
-        });
+    
+    // Si le résultat a été envoyé (resultSent est true), on affiche quand même les scores
+    // au cas où l'utilisateur retoucherait le champ après l'envoi.
+    if (resultSent) {
+        finalResultsDisplay.style.display = "block";
     }
+}
 </script>
 
 </body>
 </html>
+
