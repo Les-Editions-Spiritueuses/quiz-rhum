@@ -13,6 +13,7 @@
             --correct: #27ae60;
             --wrong: #c0392b;
             --barrel-brown: #8b4513;
+            --barrel-highlight: #a0522d;
         }
 
         /* 1. Visuel Global */
@@ -52,23 +53,62 @@
             padding-bottom: 5px;
         }
 
-        /* Placeholder pour l'illustration de la page d'accueil */
+        /* Nouveau Style pour l'Illustration du Fût (CSS ONLY) */
         .welcome-illustration {
             width: 100%;
-            height: 200px;
-            background-color: var(--barrel-brown); 
-            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 180px;
             margin: 20px 0;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
         
-        .welcome-illustration img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .barrel {
+            width: 150px;
+            height: 180px;
+            background: linear-gradient(to right, var(--barrel-brown) 5%, var(--barrel-highlight) 50%, var(--barrel-brown) 95%);
+            border-radius: 5px / 20px;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border: 2px solid #5d4037;
         }
-        
+
+        .hoop {
+            position: absolute;
+            left: -5px;
+            right: -5px;
+            height: 10px;
+            background: silver;
+            border: 1px solid #757575;
+        }
+
+        .hoop.top { top: 10px; border-radius: 5px; }
+        .hoop.bottom { bottom: 10px; border-radius: 5px; }
+
+        .barrel::before, .barrel::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .barrel::before { top: 0; }
+        .barrel::after { bottom: 0; }
+
+        .rum-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3em;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
         .welcome-description {
             font-size: 1.1em;
             margin-bottom: 30px;
@@ -190,11 +230,14 @@
     <div id="welcome-area">
         <h1 class="welcome-title">Quiz Rhum</h1>
         
+        <!-- NOUVELLE ILLUSTRATION PUREMENT CSS -->
         <div class="welcome-illustration">
-            <!-- Image de substitution publique pour garantir l'affichage -->
-            <img src="https://placehold.co/600x200/8b4513/ffffff?text=Distillerie+et+Canne+%C3%A0+Sucre" 
-                 alt="Champ de canne à sucre et distillerie artisanale" 
-                 onerror="this.style.display='none'; this.parentNode.style.backgroundImage='url(https://placehold.co/600x200/8b4513/ffffff?text=Image+Non+Disponible)'">
+            <div class="barrel">
+                <div class="hoop top"></div>
+                <div class="hoop bottom"></div>
+                <!-- Utilisation d'un emoji ou d'un caractère pour symboliser le rhum -->
+                <span class="rum-icon">⚜️</span>
+            </div>
         </div>
         
         <p class="welcome-description">
