@@ -25,9 +25,6 @@
             align-items: center;
             min-height: 100vh;
             background-color: #f4f6f7;
-            /* Si vous voulez une image de fond globale : */
-            /* background-image: url('URL_DE_VOTRE_IMAGE_DE_FOND'); */
-            /* background-size: cover; */
         }
 
         .quiz-container {
@@ -69,8 +66,7 @@
             color: white;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
-        /* NOTE: Pour l'illustration, remplacez "🌴" par votre image, ou utilisez une icône ou une couleur de fond. */
-
+        
         .welcome-description {
             font-size: 1.1em;
             margin-bottom: 30px;
@@ -204,8 +200,8 @@
     <div id="welcome-area">
     <h1 class="welcome-title">Quiz Rhum</h1>
     <div class="welcome-illustration">
-    <img src="distillerie-canne.jpg" alt="Champ de canne à sucre et distillerie artisanale" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
-</div>
+        <img src="distillerie-canne.jpg" alt="Champ de canne à sucre et distillerie artisanale" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+    </div>
     <p class="welcome-description">
         Avec Les Editions Spiritueuses, testez vos connaissances sur le rhum ! : Plongez dans son univers fascinant et découvrez si vous êtes un véritable connaisseur de ce spiritueux légendaire !
     </p>
@@ -235,29 +231,37 @@
         <button class="action-btn" id="next-btn" style="display:none" onclick="nextQuestion()">Question Suivante</button>
     </div>
 
-   <div class="results-card" id="results-area" style="display:none;">
-    <h2>Quiz Terminé !</h2>
-    <p>Votre **Index de Performance** est de :</p>
-    <div class="final-score"><span id="final-score-val">0%</span></div>
+    <div class="results-card" id="results-area" style="display:none;">
+        <h2>Quiz Terminé !</h2>
+        
+        <p style="font-size: 1.2em; color: var(--primary); font-weight: bold;">
+            Pour voir les résultats, renseignez votre pseudo :
+        </p>
 
-    <p id="time-taken-display" style="font-weight: bold; margin-bottom: 20px; color: var(--barrel-brown);"></p>
+        <input type="text" id="pseudo-input" placeholder="Votre Pseudo (requis)" 
+            style="padding: 10px; width: 80%; margin-top: 15px; border: 1px solid #ccc; border-radius: 5px;"
+            oninput="handlePseudoInput(this.value)"> <div id="final-results-display" style="display:none;">
+            <p>Votre **Index de Performance** est de :</p>
+            <div class="final-score"><span id="final-score-val">0%</span></div>
 
-    <p id="final-message"></p>
+            <p id="time-taken-display" style="font-weight: bold; margin-bottom: 20px; color: var(--barrel-brown);"></p>
 
-    <input type="text" id="pseudo-input" placeholder="Votre Pseudo (requis)" style="padding: 10px; width: 80%; margin-top: 15px; border: 1px solid #ccc; border-radius: 5px;">
+            <p id="final-message"></p>
+            
+            <p id="send-status" style="font-weight: bold; color: var(--correct); margin-top: 10px;"></p>
+        </div>
 
-    <button class="action-btn" id="submit-result-btn" onclick="sendResult()">
-        Enregistrer mon résultat
-    </button>
+        <button class="action-btn" onclick="location.reload()">Recommencer</button>
+    </div>
 
-    <button class="action-btn" onclick="location.reload()">Recommencer</button>
-</div>
 
 <script>
     // VOTRE URL DE DEPLOIEMENT APPS SCRIPT (Étape 3)
     const GAS_URL = "https://script.google.com/macros/s/AKfycbz66hZNRhinBJ8uFssR-QuZCS3eosIse39TPuBYH66ecXX4RiPucn4jV8ql7TT_qz-ffA/exec"; // METTEZ VOTRE PROPRE URL ICI !
 
-    // Données du Quiz (Identiques à la version précédente)
+    let resultSent = false; // NOUVEAU: Flag pour éviter les doubles envois
+
+    // Données du Quiz (Identiques)
     const quizData = [
         {
             q: "Quel élément différencie le plus clairement un rhum agricole d’un rhum traditionnel ?",
@@ -370,12 +374,12 @@
     let score = 0;
     const MAX_SCORE = 30;
     
-    // NOUVEAU: Variables de temps
+    // Variables de temps
     let startTime;
     let timeTakenSeconds;
-    let performanceIndex = 0; // Ajout pour stocker l'index pondéré final
+    let performanceIndex = 0; 
 
-    // Éléments du DOM (inchangé)
+    // Éléments du DOM
     const welcomeArea = document.getElementById("welcome-area");
     const quizArea = document.getElementById("quiz-area");
     const resultsArea = document.getElementById("results-area");
@@ -461,6 +465,9 @@
         quizArea.style.display = "none";
         resultsArea.style.display = "block";
         
+        // NOUVEAU : On masque l'affichage des résultats finaux pour l'envoi automatique du pseudo
+        document.getElementById("final-results-display").style.display = "none";
+        
         // --- 1. Calcul du temps écoulé ---
         const endTime = new Date();
         timeTakenSeconds = Math.round((endTime - startTime) / 1000); // Durée totale en secondes
@@ -471,12 +478,11 @@
         // --- 2. Calcul du Score Pondéré (Index de Performance) ---
         const rawPercentage = (score / MAX_SCORE) * 100;
         
-        // NOUVEAU TEMPS CIBLE: 60 secondes (1 minute)
-        const TARGET_TIME_SECONDS = 120; 
+        const TARGET_TIME_SECONDS = 120; // Temps cible: 2 minutes (120 secondes)
         
         let timeFactor = 1;
         if (timeTakenSeconds > TARGET_TIME_SECONDS) {
-            // Malus : 0.1% de malus par seconde au-delà de 1 minute (60s)
+            // Malus : 0.1% de malus par seconde au-delà du temps cible
             timeFactor = 1 - ((timeTakenSeconds - TARGET_TIME_SECONDS) * 0.001);
             timeFactor = Math.max(0.5, timeFactor);
         }
@@ -486,11 +492,8 @@
         performanceIndex = Math.max(0, Math.min(100, performanceIndex));
 
 
-        // --- 3. Affichage ---
-        
-        // Affichage de l'Index de Performance
+        // --- 3. Affichage (Mise à jour des valeurs masquées) ---
         document.getElementById("final-score-val").textContent = performanceIndex + "%"; 
-        // Affichage du temps
         document.getElementById("time-taken-display").textContent = `Durée totale : ${timeDisplay}`;
 
 
@@ -506,18 +509,43 @@
         }
     }
 
-    /**
-     * Envoie le résultat (Pseudo, Score sur 30, Temps, et Index Pondéré) au Google Sheet.
-     */
-    function sendResult() {
-        const pseudo = document.getElementById('pseudo-input').value;
-        
-        if (!pseudo) {
-            alert("Veuillez entrer un pseudo pour enregistrer le résultat.");
+    // -------------------------------------------------------------------
+    // NOUVEAU BLOC : GESTION DE LA SAISIE DU PSEUDO ET ENVOI AUTOMATIQUE
+    // -------------------------------------------------------------------
+
+    function handlePseudoInput(pseudoValue) {
+        // Si le pseudo est vide ou si le résultat a déjà été envoyé, on ne fait rien.
+        if (pseudoValue.trim().length === 0 || resultSent) {
             return;
         }
 
-        // --- Envoi au Google Sheet via Apps Script (MODIFIÉ) ---
+        // Le pseudo est renseigné, on affiche les résultats et on envoie.
+        document.getElementById("final-results-display").style.display = "block";
+        sendResult();
+    }
+
+    /**
+     * Envoie le résultat (Pseudo, Score sur 30, Temps, et Index Pondéré) au Google Sheet. (MISE À JOUR)
+     */
+    function sendResult() {
+        const pseudo = document.getElementById('pseudo-input').value;
+        const sendStatus = document.getElementById('send-status');
+        
+        // Sécurité contre double-envoi
+        if (resultSent) {
+            sendStatus.textContent = "Résultat déjà enregistré.";
+            return;
+        }
+        
+        // Double vérification (si jamais le trigger oninput n'était pas parfait)
+        if (!pseudo.trim()) {
+            sendStatus.textContent = "Veuillez entrer un pseudo valide.";
+            return;
+        }
+
+        sendStatus.textContent = "Envoi du résultat en cours...";
+        
+        // --- Envoi au Google Sheet via Apps Script ---
         fetch(GAS_URL, {
             method: 'POST',
             mode: 'no-cors', 
@@ -525,32 +553,25 @@
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                pseudo: pseudo,
-                score: score, // Score sur 30
-                time: timeTakenSeconds, // Temps en secondes
-                performanceIndex: performanceIndex // NOUVEAU: Score pondéré en %
+                pseudo: pseudo, 
+                score: score, 
+                time: timeTakenSeconds, 
+                performanceIndex: performanceIndex 
             })
         })
         .then(response => {
             console.log("Données envoyées à Google Sheet.");
-            document.getElementById('submit-result-btn').disabled = true;
-            document.getElementById('submit-result-btn').textContent = "Résultat Enregistré !";
+            resultSent = true; // IMPORTANT : Marquer le résultat comme envoyé
+            sendStatus.textContent = "✅ Résultat enregistré avec succès !";
+            document.getElementById('pseudo-input').disabled = true; // Désactiver la saisie
         })
         .catch(error => {
             console.error('Erreur lors de l\'enregistrement des données:', error);
-            alert("Erreur lors de l'enregistrement, veuillez réessayer.");
+            sendStatus.textContent = "❌ Erreur lors de l'enregistrement, veuillez réessayer.";
+            resultSent = false; 
         });
     }
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
