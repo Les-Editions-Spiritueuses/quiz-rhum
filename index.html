@@ -53,60 +53,14 @@
             padding-bottom: 5px;
         }
 
-        /* Nouveau Style pour l'Illustration du Fût (CSS ONLY) */
-        .welcome-illustration {
+        /* Style pour l'image de distillerie */
+        .distillery-image {
             width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 180px;
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: 8px;
             margin: 20px 0;
-        }
-        
-        .barrel {
-            width: 150px;
-            height: 180px;
-            background: linear-gradient(to right, var(--barrel-brown) 5%, var(--barrel-highlight) 50%, var(--barrel-brown) 95%);
-            border-radius: 5px / 20px;
-            position: relative;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-            border: 2px solid #5d4037;
-        }
-
-        .hoop {
-            position: absolute;
-            left: -5px;
-            right: -5px;
-            height: 10px;
-            background: silver;
-            border: 1px solid #757575;
-        }
-
-        .hoop.top { top: 10px; border-radius: 5px; }
-        .hoop.bottom { bottom: 10px; border-radius: 5px; }
-
-        .barrel::before, .barrel::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            height: 20px;
-            background-color: rgba(0, 0, 0, 0.1);
-            border-radius: 50%;
-            z-index: 1;
-        }
-
-        .barrel::before { top: 0; }
-        .barrel::after { bottom: 0; }
-
-        .rum-icon {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 3em;
-            color: rgba(255, 255, 255, 0.9);
-            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         .welcome-description {
@@ -124,7 +78,21 @@
         }
 
         .header h1 { margin: 0; color: var(--dark); font-size: 1.5em;}
-        .score-live { font-weight: bold; color: #7f8c8d; margin-top: 5px; }
+        
+        /* Conteneur de la progression (Question # et Chrono) */
+        .progress-bar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 1em; 
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        .question-progress-live { color: var(--primary); }
+        .chrono-live { color: var(--dark); }
+
 
         .question-card { margin-bottom: 20px; }
         
@@ -221,6 +189,16 @@
             font-weight: bold;
             color: var(--primary);
         }
+        
+        /* Style pour le bouton d'envoi des résultats */
+        #send-results-btn {
+            margin-top: 15px;
+            background-color: var(--correct);
+            border-color: var(--correct);
+        }
+        #send-results-btn:hover {
+            background-color: #229954;
+        }
     </style>
 </head>
 <body>
@@ -230,15 +208,8 @@
     <div id="welcome-area">
         <h1 class="welcome-title">Quiz Rhum</h1>
         
-        <!-- NOUVELLE ILLUSTRATION PUREMENT CSS -->
-        <div class="welcome-illustration">
-            <div class="barrel">
-                <div class="hoop top"></div>
-                <div class="hoop bottom"></div>
-                <!-- Utilisation d'un emoji ou d'un caractère pour symboliser le rhum -->
-                <span class="rum-icon">⚜️</span>
-            </div>
-        </div>
+        <!-- Affichage de l'image de la distillerie -->
+        <img id="distillery-image-placeholder" class="distillery-image" alt="Illustration de distillerie de rhum et canne à sucre">
         
         <p class="welcome-description">
             Avec Les Editions Spiritueuses, testez vos connaissances sur le rhum ! : Plongez dans son univers fascinant et découvrez si vous êtes un véritable connaisseur de ce spiritueux légendaire !
@@ -252,7 +223,12 @@
     <div id="quiz-area" style="display:none;">
         <div class="header">
             <h1>Connaisseur du Rhum</h1>
-            <div class="score-live" id="progress-text"></div>
+            
+            <!-- AFFICHAGE DE LA PROGRESSION (Question # et Chronomètre) -->
+            <div class="progress-bar-container">
+                <span id="question-progress-live" class="question-progress-live">Question 0 / 15</span> 
+                <span id="chrono-live" class="chrono-live">00:00</span>
+            </div>
         </div>
 
         <div class="question-card">
@@ -280,28 +256,43 @@
             style="padding: 10px; width: 80%; margin-top: 15px; border: 1px solid #ccc; border-radius: 5px;"
             oninput="handlePseudoInput(this.value)"> 
         
+        <!-- Bouton d'envoi des résultats -->
+        <button class="action-btn" id="send-results-btn" style="display:none;" onclick="sendResultFromButton()">
+            Enregistrer mon résultat
+        </button>
+        
         <div id="final-results-display" style="display:none;">
-            <p>Votre **Index de Performance** est de :</p>
-            <div class="final-score"><span id="final-score-val">0%</span></div>
+            
+            <!-- Score brut X/30 -->
+            <p id="raw-score-display" style="font-size: 1.2em; font-weight: bold; margin-bottom: 5px; color: var(--dark);"></p>
 
             <p id="time-taken-display" style="font-weight: bold; margin-bottom: 20px; color: var(--barrel-brown);"></p>
+            
+            <p>Votre **Index de Performance** est de :</p>
+            <div class="final-score"><span id="final-score-val">0%</span></div>
 
             <p id="final-message"></p>
             
             <p id="send-status" style="font-weight: bold; color: var(--correct); margin-top: 10px;"></p>
         </div>
 
-        <button class="action-btn" onclick="location.reload()">Recommencer</button>
+        <button class="action-btn" style="background-color: #34495e;" onclick="location.reload()">Recommencer</button>
     </div>
 
 
 <script>
+    // -------------------------------------------------------------------
+    // URL BRUTE (RAW) DE L'IMAGE GITHUB CORRIGÉE
+    // -------------------------------------------------------------------
+    const DISTILLERY_IMAGE_URL = "https://raw.githubusercontent.com/Les-Editions-Spiritueuses/quiz-rhum/main/distillerie-canne.jpg"; 
+
     // VOTRE URL DE DEPLOIEMENT GOOGLE APPS SCRIPT
     // REMPLACER cette chaîne par votre propre URL de déploiement Google Apps Script !
     const GAS_URL = "https://script.google.com/macros/s/AKfycbyvF0ZLV0GEm8RJkzZe_IOTUjitUd86IDbKSuV9f3qkBRWBxxlOT5TSaX6vROIQkcsS_w/exec";
 
     let resultSent = false; 
-
+    let chronoInterval; // Pour stocker l'intervalle du chronomètre
+    
     // Données du Quiz
     const quizData = [
         {
@@ -413,11 +404,11 @@
 
     let currentQuestionIndex = 0;
     let score = 0;
-    const MAX_SCORE = 30;
+    const MAX_SCORE = 30; // Score max possible
     
     // Variables de temps
     let startTime;
-    let timeTakenSeconds;
+    let timeTakenSeconds = 0;
     let performanceIndex = 0; 
 
     // Éléments du DOM
@@ -427,10 +418,35 @@
 
     const questionText = document.getElementById("question-text");
     const optionsContainer = document.getElementById("options-container");
-    const progressText = document.getElementById("progress-text");
     const pointsDisplay = document.getElementById("q-points");
     const feedbackArea = document.getElementById("feedback-area");
     const nextBtn = document.getElementById("next-btn");
+    
+    // Éléments de progression et d'image
+    const questionProgressLive = document.getElementById("question-progress-live"); 
+    const chronoLiveDisplay = document.getElementById("chrono-live");
+    const sendResultsBtn = document.getElementById("send-results-btn");
+    const distilleryImage = document.getElementById("distillery-image-placeholder");
+
+    // Chargement de l'image de la distillerie au démarrage
+    distilleryImage.src = DISTILLERY_IMAGE_URL;
+    distilleryImage.onerror = function() {
+        // Fallback si l'image GitHub ne charge pas
+        this.src = "https://placehold.co/600x250/c0392b/ffffff?text=Erreur+de+chargement+Image+GitHub";
+        console.error("L'image de la distillerie n'a pas pu être chargée. Vérifiez l'URL brute (Raw) GitHub.");
+    };
+
+
+    /**
+     * Met à jour le chronomètre affiché.
+     */
+    function updateChrono() {
+        const currentTime = new Date();
+        timeTakenSeconds = Math.round((currentTime - startTime) / 1000); 
+        const minutes = String(Math.floor(timeTakenSeconds / 60)).padStart(2, '0');
+        const seconds = String(timeTakenSeconds % 60).padStart(2, '0');
+        chronoLiveDisplay.textContent = `${minutes}:${seconds}`;
+    }
 
     /**
      * Lance le quiz en cachant la page d'accueil et DÉMARRE LE CHRONOMÈTRE.
@@ -439,6 +455,7 @@
         welcomeArea.style.display = "none";
         quizArea.style.display = "block";
         startTime = new Date(); // Démarrage du chronomètre
+        chronoInterval = setInterval(updateChrono, 1000); // Mise à jour toutes les secondes
         loadQuestion();
     }
 
@@ -447,7 +464,9 @@
         
         questionText.textContent = currentData.q;
         pointsDisplay.textContent = currentData.points + (currentData.points > 1 ? " Points" : " Point");
-        progressText.textContent = `Question ${currentQuestionIndex + 1} / ${quizData.length}`;
+        
+        // MISE À JOUR DU NUMÉRO DE QUESTION
+        questionProgressLive.textContent = `Question ${currentQuestionIndex + 1} / ${quizData.length}`;
         
         optionsContainer.innerHTML = "";
         feedbackArea.style.display = "none";
@@ -503,6 +522,7 @@
      * Affiche les résultats, calcule le temps et l'Index de Performance
      */
     function showResults() {
+        clearInterval(chronoInterval); // Arrêter le chronomètre
         quizArea.style.display = "none";
         resultsArea.style.display = "block";
         
@@ -510,8 +530,6 @@
         document.getElementById("final-results-display").style.display = "none";
         
         // --- 1. Calcul du temps écoulé ---
-        const endTime = new Date();
-        timeTakenSeconds = Math.round((endTime - startTime) / 1000); // Durée totale en secondes
         const minutes = Math.floor(timeTakenSeconds / 60);
         const seconds = timeTakenSeconds % 60;
         const timeDisplay = `${minutes} min ${seconds} sec`;
@@ -535,6 +553,10 @@
 
         // --- 3. Mise à jour des valeurs de l'écran de résultats ---
         document.getElementById("final-score-val").textContent = performanceIndex + "%"; 
+        
+        // Afficher le score brut (X/30)
+        document.getElementById("raw-score-display").textContent = `Score brut : ${score} / ${MAX_SCORE} Points`;
+
         document.getElementById("time-taken-display").textContent = `Durée totale : ${timeDisplay}`;
 
 
@@ -548,6 +570,9 @@
         } else {
             msg.textContent = "C'est un début. Accélérez le rythme !";
         }
+        
+        // Initialiser le statut d'envoi
+        document.getElementById('send-status').textContent = "Statut : Prêt à envoyer.";
     }
     
     // -------------------------------------------------------------------
@@ -557,6 +582,9 @@
         if (resultSent) return; 
 
         document.getElementById('send-status').textContent = "Envoi des résultats en cours...";
+        
+        // Afficher d'abord les résultats calculés si ce n'est pas fait
+        document.getElementById("final-results-display").style.display = "block";
 
         const dataToSend = {
             pseudo: pseudo,
@@ -587,11 +615,13 @@
                 success = true;
                 resultSent = true;
                 document.getElementById('send-status').textContent = "✅ Résultat enregistré !";
+                sendResultsBtn.disabled = true; // Désactiver le bouton après l'envoi
 
             } catch (error) {
                 attempt++;
                 if (attempt < maxRetries) {
                     const waitTime = Math.pow(2, attempt) * 1000; 
+                    // Pas de log d'erreur ici pour l'exponential backoff (consigne)
                     await delay(waitTime);
                 } else {
                     console.error("Erreur lors de l'envoi des données à Google Sheets (après plusieurs tentatives):", error);
@@ -603,25 +633,40 @@
     }
 
     // -------------------------------------------------------------------
-    // GESTION DE LA SAISIE DU PSEUDO (Déclencheur d'envoi)
+    // GESTION DE LA SAISIE DU PSEUDO (Afficher le bouton d'envoi)
     // -------------------------------------------------------------------
 
     function handlePseudoInput(pseudoValue) {
-        const finalResultsDisplay = document.getElementById("final-results-display");
         const pseudoTrimmed = pseudoValue.trim();
         
-        // 1. Si le pseudo est vide, on masque les résultats finaux.
-        if (pseudoTrimmed.length === 0) {
-            finalResultsDisplay.style.display = "none";
-            return;
+        // Afficher ou masquer le bouton d'envoi en fonction de la saisie
+        if (pseudoTrimmed.length > 0) {
+            sendResultsBtn.style.display = "block";
+        } else {
+            sendResultsBtn.style.display = "none";
         }
         
-        // 2. Le pseudo est renseigné, on affiche les résultats.
-        finalResultsDisplay.style.display = "block";
+        // Si le pseudo change APRÈS l'envoi initial, on permet de renvoyer (optionnel)
+        if (resultSent) {
+            resultSent = false;
+            document.getElementById('send-status').textContent = "Statut : Prêt à envoyer de nouveau.";
+            sendResultsBtn.disabled = false;
+        }
+    }
+    
+    // -------------------------------------------------------------------
+    // GESTION DU CLIC SUR LE BOUTON D'ENVOI
+    // -------------------------------------------------------------------
+    
+    function sendResultFromButton() {
+        const pseudoInput = document.getElementById('pseudo-input');
+        const pseudo = pseudoInput.value.trim();
 
-        // 3. Si le résultat n'a pas encore été envoyé, on l'envoie.
-        if (!resultSent) {
-            sendResult(pseudoTrimmed); 
+        if (pseudo.length > 0) {
+            sendResult(pseudo);
+        } else {
+            document.getElementById('send-status').textContent = "Veuillez entrer un pseudo valide.";
+            pseudoInput.focus();
         }
     }
 </script>
