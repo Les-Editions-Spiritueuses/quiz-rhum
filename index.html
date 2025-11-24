@@ -12,7 +12,7 @@
             --dark: #2c3e50;
             --correct: #27ae60;
             --wrong: #c0392b;
-            --barrel-brown: #8b4513;
+            --barrel-brown: #8b4513; /* Brun de tonneau */
             --barrel-highlight: #a0522d;
         }
 
@@ -199,6 +199,16 @@
         #send-results-btn:hover {
             background-color: #229954;
         }
+        
+        /* Style pour le bouton du Quiz Whisky (BRUN DE TONNEAU) */
+        #quiz-whisky-btn {
+            background-color: var(--barrel-brown) !important; 
+            margin-bottom: 10px !important;
+        }
+        #quiz-whisky-btn:hover {
+            background-color: var(--barrel-highlight) !important;
+        }
+
     </style>
 </head>
 <body>
@@ -233,7 +243,7 @@
 
         <div class="question-card">
             <div class="question-meta">
-                <span id="q-difficulty">Difficulté</span>
+                <span id="q-difficulty">Difficultité</span>
                 <span id="q-points">Points</span>
             </div>
             <div class="question-text" id="question-text"></div>
@@ -276,13 +286,19 @@
             <p id="send-status" style="font-weight: bold; color: var(--correct); margin-top: 10px;"></p>
         </div>
 
+        <!-- Bouton vers le Quiz Whisky (Affiché après envoi) -->
+        <button class="action-btn" id="quiz-whisky-btn" style="display:none;" 
+                onclick="window.open('https://les-editions-spiritueuses.github.io/quiz-whisky/', '_self')">
+            Testez vos connaissances sur le whisky !
+        </button>
+
         <button class="action-btn" style="background-color: #34495e;" onclick="location.reload()">Recommencer</button>
     </div>
 
 
 <script>
     // -------------------------------------------------------------------
-    // URL BRUTE (RAW) DE L'IMAGE GITHUB CORRIGÉE
+    // URL BRUTE (RAW) DE L'IMAGE GITHUB
     // -------------------------------------------------------------------
     const DISTILLERY_IMAGE_URL = "https://raw.githubusercontent.com/Les-Editions-Spiritueuses/quiz-rhum/main/distillerie-canne.jpg"; 
 
@@ -422,11 +438,12 @@
     const feedbackArea = document.getElementById("feedback-area");
     const nextBtn = document.getElementById("next-btn");
     
-    // Éléments de progression et d'image
+    // Éléments de progression et d'image/bouton
     const questionProgressLive = document.getElementById("question-progress-live"); 
     const chronoLiveDisplay = document.getElementById("chrono-live");
     const sendResultsBtn = document.getElementById("send-results-btn");
     const distilleryImage = document.getElementById("distillery-image-placeholder");
+    const quizWhiskyBtn = document.getElementById("quiz-whisky-btn"); // Nouveau bouton
 
     // Chargement de l'image de la distillerie au démarrage
     distilleryImage.src = DISTILLERY_IMAGE_URL;
@@ -573,6 +590,9 @@
         
         // Initialiser le statut d'envoi
         document.getElementById('send-status').textContent = "Statut : Prêt à envoyer.";
+        
+        // S'assurer que le bouton Whisky est caché au chargement des résultats
+        quizWhiskyBtn.style.display = 'none';
     }
     
     // -------------------------------------------------------------------
@@ -616,6 +636,9 @@
                 resultSent = true;
                 document.getElementById('send-status').textContent = "✅ Résultat enregistré !";
                 sendResultsBtn.disabled = true; // Désactiver le bouton après l'envoi
+                
+                // NOUVEAU : Afficher le bouton vers le quiz Whisky
+                quizWhiskyBtn.style.display = 'block'; 
 
             } catch (error) {
                 attempt++;
@@ -651,6 +674,7 @@
             resultSent = false;
             document.getElementById('send-status').textContent = "Statut : Prêt à envoyer de nouveau.";
             sendResultsBtn.disabled = false;
+            quizWhiskyBtn.style.display = 'none'; // Cacher le bouton s'il y a un changement
         }
     }
     
