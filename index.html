@@ -1,676 +1,697 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Rhum - Connaisseur</title>
-    <style>
-        /* Couleurs et Thème Rhum */
-        :root {
-            --primary: #d35400; /* Rhum Ambré */
-            --secondary: #fdf2e9; /* Fond Clair */
-            --dark: #2c3e50;
-            --correct: #27ae60;
-            --wrong: #c0392b;
-            --barrel-brown: #8b4513;
-            --barrel-highlight: #a0522d;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Rhum - Connaisseur</title>
+    <style>
+        /* Couleurs et Thème Rhum */
+        :root {
+            --primary: #d35400; /* Rhum Ambré */
+            --secondary: #fdf2e9; /* Fond Clair */
+            --dark: #2c3e50;
+            --correct: #27ae60;
+            --wrong: #c0392b;
+            --barrel-brown: #8b4513;
+            --barrel-highlight: #a0522d;
+        }
 
-        /* 1. Visuel Global */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--dark);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f4f6f7;
-        }
+        /* 1. Visuel Global */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f6f7;
+        }
 
-        .quiz-container {
-            background: white;
-            width: 100%;
-            max-width: 600px;
-            border-radius: 12px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            overflow: hidden;
-            padding: 30px;
-            transition: all 0.3s ease-in-out;
-        }
+        .quiz-container {
+            background: white;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            overflow: hidden;
+            padding: 30px;
+            transition: all 0.3s ease-in-out;
+        }
 
-        /* 2. Styles de la Page d'Accueil */
-        #welcome-area {
-            text-align: center;
-        }
+        /* 2. Styles de la Page d'Accueil */
+        #welcome-area {
+            text-align: center;
+        }
 
-        .welcome-title {
-            color: var(--primary);
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            border-bottom: 3px solid var(--primary);
-            display: inline-block;
-            padding-bottom: 5px;
-        }
+        .welcome-title {
+            color: var(--primary);
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            border-bottom: 3px solid var(--primary);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
 
-        /* Style pour l'image de distillerie */
-        .distillery-image {
-            width: 100%;
-            max-height: 250px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin: 20px 0;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
+        /* Style pour l'image de distillerie */
+        .distillery-image {
+            width: 100%;
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
 
-        .welcome-description {
-            font-size: 1.1em;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
+        .welcome-description {
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
 
-        /* Styles du Quiz */
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-            border-bottom: 2px solid var(--secondary);
-            padding-bottom: 10px;
-        }
+        /* Styles du Quiz */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 10px;
+        }
 
-        .header h1 { margin: 0; color: var(--dark); font-size: 1.5em;}
-        
-        /* Conteneur de la progression (Question # et Chrono) */
-        .progress-bar-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-            font-size: 1em; 
-            font-weight: bold;
-            color: var(--dark);
-        }
+        .header h1 { margin: 0; color: var(--dark); font-size: 1.5em;}
+        
+        /* Conteneur de la progression (Question # et Chrono) */
+        .progress-bar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 1em; 
+            font-weight: bold;
+            color: var(--dark);
+        }
 
-        .question-progress-live { color: var(--primary); }
-        .chrono-live { color: var(--dark); }
+        .question-progress-live { color: var(--primary); }
+        .chrono-live { color: var(--dark); }
 
 
-        .question-card { margin-bottom: 20px; }
-        
-        .question-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9em;
-            color: var(--primary);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
+        .question-card { margin-bottom: 20px; }
+        
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: var(--primary);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
 
-        .question-text::before {
-            content: "🥃 ";
-            font-size: 1.2em;
-            margin-right: 5px;
-            color: var(--primary);
-        }
-        
-        .question-text {
-            font-size: 1.2em;
-            margin-bottom: 20px;
-            line-height: 1.5;
-            padding-left: 5px;
-        }
+        .question-text::before {
+            content: "🥃 ";
+            font-size: 1.2em;
+            margin-right: 5px;
+            color: var(--primary);
+        }
+        
+        .question-text {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            padding-left: 5px;
+        }
 
-        .options-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
 
-        .option-btn {
-            background: white;
-            border: 2px solid #bdc3c7;
-            padding: 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1em;
-            text-align: left;
-            transition: all 0.2s;
-        }
+        .option-btn {
+            background: white;
+            border: 2px solid #bdc3c7;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            text-align: left;
+            transition: all 0.2s;
+        }
 
-        .option-btn:hover:not(:disabled) {
-            border-color: var(--primary);
-            background-color: var(--secondary);
-        }
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background-color: var(--secondary);
+        }
 
-        .option-btn.correct {
-            background-color: #d4efdf;
-            border-color: var(--correct);
-            color: var(--correct);
-        }
+        .option-btn.correct {
+            background-color: #d4efdf;
+            border-color: var(--correct);
+            color: var(--correct);
+        }
 
-        .option-btn.wrong {
-            background-color: #fadbd8;
-            border-color: var(--wrong);
-            color: var(--wrong);
-        }
+        .option-btn.wrong {
+            background-color: #fadbd8;
+            border-color: var(--wrong);
+            color: var(--wrong);
+        }
 
-        .feedback {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            background-color: #ecf0f1;
-            display: none;
-        }
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #ecf0f1;
+            display: none;
+        }
 
-        /* Style pour les boutons généraux */
-        .action-btn {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1em;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: background-color 0.2s;
-        }
+        /* Style pour les boutons généraux */
+        .action-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.2s;
+        }
 
-        .action-btn:hover { background-color: #a04000; }
-        
-        .results-card {
-            text-align: center;
-        }
-        
-        .final-score {
-            font-size: 3em;
-            font-weight: bold;
-            color: var(--primary);
-        }
-        
-        /* Style pour le bouton d'envoi des résultats */
-        #send-results-btn {
-            margin-top: 15px;
-            background-color: var(--correct);
-            border-color: var(--correct);
-        }
-        #send-results-btn:hover {
-            background-color: #229954;
-        }
-    </style>
+        .action-btn:hover { background-color: #a04000; }
+        
+        /* Style pour le bouton du Quiz Whisky (action secondaire) */
+        .other-quiz-btn {
+            display: block;
+            width: 100%;
+            padding: 10px; /* Moins haut que le bouton principal */
+            background-color: transparent; /* Fond transparent */
+            color: var(--dark); /* Texte sombre */
+            border: 1px solid var(--dark); /* Bordure sombre */
+            border-radius: 8px;
+            font-size: 1em;
+            text-align: center;
+            cursor: pointer;
+            margin-top: 15px; /* Séparation */
+            text-decoration: none; /* Enlève le soulignement du lien */
+            transition: all 0.2s;
+        }
+
+        .other-quiz-btn:hover {
+            background-color: var(--dark);
+            color: white;
+        }
+        
+        .results-card {
+            text-align: center;
+        }
+        
+        .final-score {
+            font-size: 3em;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        /* Style pour le bouton d'envoi des résultats */
+        #send-results-btn {
+            margin-top: 15px;
+            background-color: var(--correct);
+            border-color: var(--correct);
+        }
+        #send-results-btn:hover {
+            background-color: #229954;
+        }
+    </style>
 </head>
 <body>
 
 <div class="quiz-container">
-    
-    <div id="welcome-area">
-        <h1 class="welcome-title">Quiz Rhum</h1>
-        
-        <!-- Affichage de l'image de la distillerie -->
-        <img id="distillery-image-placeholder" class="distillery-image" alt="Illustration de distillerie de rhum et canne à sucre">
-        
-        <p class="welcome-description">
-            Avec Les Editions Spiritueuses, testez vos connaissances sur le rhum ! : Plongez dans son univers fascinant et découvrez si vous êtes un véritable connaisseur de ce spiritueux légendaire !
-        </p>
-        <p style="font-weight: bold; color: #CC7722; border: 1px dashed #CC7722; padding: 10px; margin-top: 20px;">
-        ⚠️ RÈGLE DE SCORING : Le score final est pondéré par le temps de réponse. Le temps cible est de **2 minutes (120 secondes)**. Si vous dépassez 2 minutes, votre Index de Performance sera légèrement pénalisé.
-    </p>
-        <button class="action-btn" onclick="startQuiz()">Commencer le Quiz</button>
-    </div>
+    
+    <div id="welcome-area">
+        <h1 class="welcome-title">Quiz Rhum</h1>
+        
+                <img id="distillery-image-placeholder" class="distillery-image" alt="Illustration de distillerie de rhum et canne à sucre">
+        
+        <p class="welcome-description">
+            Avec Les Editions Spiritueuses, testez vos connaissances sur le rhum ! : Plongez dans son univers fascinant et découvrez si vous êtes un véritable connaisseur de ce spiritueux légendaire !
+        </p>
+        <p style="font-weight: bold; color: #CC7722; border: 1px dashed #CC7722; padding: 10px; margin-top: 20px;">
+        ⚠️ RÈGLE DE SCORING : Le score final est pondéré par le temps de réponse. Le temps cible est de **2 minutes (120 secondes)**. Si vous dépassez 2 minutes, votre Index de Performance sera légèrement pénalisé.
+    </p>
+        <button class="action-btn" onclick="startQuiz()">Commencer le Quiz</button>
+        
+                <a href="https://les-editions-spiritueuses.github.io/quiz-whisky/" target="_blank" class="other-quiz-btn">
+            Testez votre connaissance sur le whisky
+        </a>
+    </div>
 
-    <div id="quiz-area" style="display:none;">
-        <div class="header">
-            <h1>Connaisseur du Rhum</h1>
-            
-            <!-- AFFICHAGE DE LA PROGRESSION (Question # et Chronomètre) -->
-            <div class="progress-bar-container">
-                <span id="question-progress-live" class="question-progress-live">Question 0 / 15</span> 
-                <span id="chrono-live" class="chrono-live">00:00</span>
-            </div>
-        </div>
+    <div id="quiz-area" style="display:none;">
+        <div class="header">
+            <h1>Connaisseur du Rhum</h1>
+            
+                        <div class="progress-bar-container">
+                <span id="question-progress-live" class="question-progress-live">Question 0 / 15</span> 
+                <span id="chrono-live" class="chrono-live">00:00</span>
+            </div>
+        </div>
 
-        <div class="question-card">
-            <div class="question-meta">
-                <span id="q-difficulty">Difficulté</span>
-                <span id="q-points">Points</span>
-            </div>
-            <div class="question-text" id="question-text"></div>
-            <div class="options-grid" id="options-container">
-                </div>
-        </div>
+        <div class="question-card">
+            <div class="question-meta">
+                <span id="q-difficulty">Difficulté</span>
+                <span id="q-points">Points</span>
+            </div>
+            <div class="question-text" id="question-text"></div>
+            <div class="options-grid" id="options-container">
+                </div>
+        </div>
 
-        <div class="feedback" id="feedback-area"></div>
-        <button class="action-btn" id="next-btn" style="display:none" onclick="nextQuestion()">Question Suivante</button>
-    </div>
+        <div class="feedback" id="feedback-area"></div>
+        <button class="action-btn" id="next-btn" style="display:none" onclick="nextQuestion()">Question Suivante</button>
+    </div>
 
-    <div class="results-card" id="results-area" style="display:none;">
-        <h2>Quiz Terminé !</h2>
-        
-        <p style="font-size: 1.2em; color: var(--primary); font-weight: bold;">
-            Pour voir les résultats, renseignez votre pseudo :
-        </p>
+    <div class="results-card" id="results-area" style="display:none;">
+        <h2>Quiz Terminé !</h2>
+        
+        <p style="font-size: 1.2em; color: var(--primary); font-weight: bold;">
+            Pour voir les résultats, renseignez votre pseudo :
+        </p>
 
-        <input type="text" id="pseudo-input" placeholder="Votre Pseudo (requis)" 
-            style="padding: 10px; width: 80%; margin-top: 15px; border: 1px solid #ccc; border-radius: 5px;"
-            oninput="handlePseudoInput(this.value)"> 
-        
-        <!-- Bouton d'envoi des résultats -->
-        <button class="action-btn" id="send-results-btn" style="display:none;" onclick="sendResultFromButton()">
-            Enregistrer mon résultat
-        </button>
-        
-        <div id="final-results-display" style="display:none;">
-            
-            <!-- Score brut X/30 -->
-            <p id="raw-score-display" style="font-size: 1.2em; font-weight: bold; margin-bottom: 5px; color: var(--dark);"></p>
+        <input type="text" id="pseudo-input" placeholder="Votre Pseudo (requis)" 
+            style="padding: 10px; width: 80%; margin-top: 15px; border: 1px solid #ccc; border-radius: 5px;"
+            oninput="handlePseudoInput(this.value)"> 
+        
+                <button class="action-btn" id="send-results-btn" style="display:none;" onclick="sendResultFromButton()">
+            Enregistrer mon résultat
+        </button>
+        
+        <div id="final-results-display" style="display:none;">
+            
+                        <p id="raw-score-display" style="font-size: 1.2em; font-weight: bold; margin-bottom: 5px; color: var(--dark);"></p>
 
-            <p id="time-taken-display" style="font-weight: bold; margin-bottom: 20px; color: var(--barrel-brown);"></p>
-            
-            <p>Votre **Index de Performance** est de :</p>
-            <div class="final-score"><span id="final-score-val">0%</span></div>
+            <p id="time-taken-display" style="font-weight: bold; margin-bottom: 20px; color: var(--barrel-brown);"></p>
+            
+            <p>Votre **Index de Performance** est de :</p>
+            <div class="final-score"><span id="final-score-val">0%</span></div>
 
-            <p id="final-message"></p>
-            
-            <p id="send-status" style="font-weight: bold; color: var(--correct); margin-top: 10px;"></p>
-        </div>
+            <p id="final-message"></p>
+            
+            <p id="send-status" style="font-weight: bold; color: var(--correct); margin-top: 10px;"></p>
+        </div>
 
-        <button class="action-btn" style="background-color: #34495e;" onclick="location.reload()">Recommencer</button>
-    </div>
+        <button class="action-btn" style="background-color: #34495e;" onclick="location.reload()">Recommencer</button>
+    </div>
 
 
 <script>
-    // -------------------------------------------------------------------
-    // URL BRUTE (RAW) DE L'IMAGE GITHUB CORRIGÉE
-    // -------------------------------------------------------------------
-    const DISTILLERY_IMAGE_URL = "https://raw.githubusercontent.com/Les-Editions-Spiritueuses/quiz-rhum/main/distillerie-canne.jpg"; 
+    // -------------------------------------------------------------------
+    // URL BRUTE (RAW) DE L'IMAGE GITHUB CORRIGÉE
+    // -------------------------------------------------------------------
+    const DISTILLERY_IMAGE_URL = "https://raw.githubusercontent.com/Les-Editions-Spiritueuses/quiz-rhum/main/distillerie-canne.jpg"; 
 
-    // VOTRE URL DE DEPLOIEMENT GOOGLE APPS SCRIPT
-    // REMPLACER cette chaîne par votre propre URL de déploiement Google Apps Script !
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbyKCoo68vq5DbX4v2vlSLGGkKigeDWeoEF3dMOxwP7tllx5MPADuSzvLxpOeMGM1PNB4Q/exec";
+    // VOTRE URL DE DEPLOIEMENT GOOGLE APPS SCRIPT
+    // REMPLACER cette chaîne par votre propre URL de déploiement Google Apps Script !
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbyKCoo68vq5DbX4v2vlSLGGkKigeDWeoEF3dMOxwP7tllx5MPADuSzvLxpOeMGM1PNB4Q/exec";
 
-    let resultSent = false; 
-    let chronoInterval; // Pour stocker l'intervalle du chronomètre
-    
-    // Données du Quiz
-    const quizData = [
-        {
-            q: "Quel élément différencie le plus clairement un rhum agricole d’un rhum traditionnel ?",
-            options: ["Le type de fûts utilisés", "Le climat de la distillerie", "La matière première : vesou ou mélasse"],
-            correct: 2,
-            points: 1,
-            explanation: "Le rhum agricole est fait à partir de pur jus de canne (vesou), le traditionnel à partir de mélasse."
-        },
-        {
-            q: "Le vesou est :",
-            options: ["Le jus de canne à sucre frais pressé", "Un sirop de canne concentré", "Un distillat de mélasse"],
-            correct: 0,
-            points: 2,
-            explanation: "Le vesou est le terme technique désignant le jus extrait directement du broyage de la canne."
-        },
-        {
-            q: "La mélasse donne souvent des rhums :",
-            options: ["Neutres et peu aromatiques", "Plus ronds, parfois gourmands", "Légers et floraux sans exception"],
-            correct: 1,
-            points: 3,
-            explanation: "La mélasse, issue du sucre cuit, tend à donner des notes de caramel et une certaine rondeur."
-        },
-        {
-            q: "Quelle est l’une des conséquences d’une fermentation longue ?",
-            options: ["Favorise les arômes complexes (fruités/fermentaires)", "Donne un rhum très léger", "Réduit systématiquement l'alcool"],
-            correct: 0,
-            points: 1,
-            explanation: "Le temps permet aux levures de créer des esters complexes et aromatiques."
-        },
-        {
-            q: "Une fermentation courte donne généralement :",
-            options: ["Des arômes lourds et épais", "Des rhums exclusivement vieillis", "Des rhums plus légers et fruités"],
-            correct: 2,
-            points: 2,
-            explanation: "Une fermentation rapide limite les congénères lourds pour un résultat plus léger."
-        },
-        {
-            q: "Une fermentation longue permet surtout :",
-            options: ["De réduire le taux d’alcool", "De développer des arômes complexes, riches en esters", "D’aromatiser avec des fruits"],
-            correct: 1,
-            points: 3,
-            explanation: "C'est le secret des rhums 'Grand Arôme' ou High Ester."
-        },
-        {
-            q: "La distillation consiste principalement à :",
-            options: ["Sucrer le rhum", "Séparer l’alcool de l’eau par chauffage", "Embouteiller le distillat"],
-            correct: 1,
-            points: 1,
-            explanation: "C'est un procédé de séparation thermique basé sur les points d'ébullition."
-        },
-        {
-            q: "Le pot still est souvent associé à :",
-            options: ["Une distillation à froid", "Des rhums très neutres", "Un style aromatique riche et puissant"],
-            correct: 2,
-            points: 2,
-            explanation: "L'alambic à repasse conserve plus d'éléments lourds et aromatiques que la colonne."
-        },
-        {
-            q: "La distillation en colonne permet généralement :",
-            options: ["Une production continue et optimisée", "Une production artisanale", "Un taux d'alcool faible"],
-            correct: 0,
-            points: 3,
-            explanation: "C'est la méthode industrielle par excellence pour les grands volumes."
-        },
-        {
-            q: "Quel climat accélère le vieillissement d'un rhum ?",
-            options: ["Tropical chaud et humide", "Sec et froid", "Alpin"],
-            correct: 0,
-            points: 1,
-            explanation: "La chaleur dilate le bois et accélère les réactions chimiques."
-        },
-        {
-            q: "Un vieillissement en climat tropical a pour effet :",
-            options: ["D’accélérer la maturation et les arômes boisés", "De neutraliser le bois", "De réduire l'alcool drastiquement"],
-            correct: 0,
-            points: 2,
-            explanation: "La 'part des anges' est élevée, concentrant le rhum et extrayant le bois rapidement."
-        },
-        {
-            q: "Un rhum fini en fût de Pedro Ximénez aura souvent :",
-            options: ["Un profil sec et tannique", "Une texture saline", "Des notes liquoreuses, raisin sec et caramel"],
-            correct: 2,
-            points: 3,
-            explanation: "Le fût de ce vin doux lègue ses arômes sucrés et fruités au rhum."
-        },
-        {
-            q: "Quel est l’un des avantages de l’assemblage ?",
-            options: ["Créer un produit équilibré et complexe", "Augmenter la production sans distiller", "Réduire le sucre"],
-            correct: 0,
-            points: 1,
-            explanation: "L'assemblage permet d'harmoniser les profils et d'assurer la constance."
-        },
-        {
-            q: "Un rhum 'mono-fût' (Single Cask) :",
-            options: ["Est un assemblage de 3 cuvées", "Vient d’un unique fût", "Est un rhum brut sans distillation"],
-            correct: 1,
-            points: 2,
-            explanation: "Comme son nom l'indique, il provient d'une seule barrique spécifique."
-        },
-        {
-            q: "La méthode Solera permet :",
-            options: ["De produire un monocépage", "De filtrer via la canne", "Intégrer en continu vieux et jeunes rhums"],
-            correct: 2,
-            points: 3,
-            explanation: "C'est un système dynamique de mélange vertical pour homogénéiser les âges."
-        }
-    ];
+    let resultSent = false; 
+    let chronoInterval; // Pour stocker l'intervalle du chronomètre
+    
+    // Données du Quiz
+    const quizData = [
+        {
+            q: "Quel élément différencie le plus clairement un rhum agricole d’un rhum traditionnel ?",
+            options: ["Le type de fûts utilisés", "Le climat de la distillerie", "La matière première : vesou ou mélasse"],
+            correct: 2,
+            points: 1,
+            explanation: "Le rhum agricole est fait à partir de pur jus de canne (vesou), le traditionnel à partir de mélasse."
+        },
+        {
+            q: "Le vesou est :",
+            options: ["Le jus de canne à sucre frais pressé", "Un sirop de canne concentré", "Un distillat de mélasse"],
+            correct: 0,
+            points: 2,
+            explanation: "Le vesou est le terme technique désignant le jus extrait directement du broyage de la canne."
+        },
+        {
+            q: "La mélasse donne souvent des rhums :",
+            options: ["Neutres et peu aromatiques", "Plus ronds, parfois gourmands", "Légers et floraux sans exception"],
+            correct: 1,
+            points: 3,
+            explanation: "La mélasse, issue du sucre cuit, tend à donner des notes de caramel et une certaine rondeur."
+        },
+        {
+            q: "Quelle est l’une des conséquences d’une fermentation longue ?",
+            options: ["Favorise les arômes complexes (fruités/fermentaires)", "Donne un rhum très léger", "Réduit systématiquement l'alcool"],
+            correct: 0,
+            points: 1,
+            explanation: "Le temps permet aux levures de créer des esters complexes et aromatiques."
+        },
+        {
+            q: "Une fermentation courte donne généralement :",
+            options: ["Des arômes lourds et épais", "Des rhums exclusivement vieillis", "Des rhums plus légers et fruités"],
+            correct: 2,
+            points: 2,
+            explanation: "Une fermentation rapide limite les congénères lourds pour un résultat plus léger."
+        },
+        {
+            q: "Une fermentation longue permet surtout :",
+            options: ["De réduire le taux d’alcool", "De développer des arômes complexes, riches en esters", "D’aromatiser avec des fruits"],
+            correct: 1,
+            points: 3,
+            explanation: "C'est le secret des rhums 'Grand Arôme' ou High Ester."
+        },
+        {
+            q: "La distillation consiste principalement à :",
+            options: ["Sucrer le rhum", "Séparer l’alcool de l’eau par chauffage", "Embouteiller le distillat"],
+            correct: 1,
+            points: 1,
+            explanation: "C'est un procédé de séparation thermique basé sur les points d'ébullition."
+        },
+        {
+            q: "Le pot still est souvent associé à :",
+            options: ["Une distillation à froid", "Des rhums très neutres", "Un style aromatique riche et puissant"],
+            correct: 2,
+            points: 2,
+            explanation: "L'alambic à repasse conserve plus d'éléments lourds et aromatiques que la colonne."
+        },
+        {
+            q: "La distillation en colonne permet généralement :",
+            options: ["Une production continue et optimisée", "Une production artisanale", "Un taux d'alcool faible"],
+            correct: 0,
+            points: 3,
+            explanation: "C'est la méthode industrielle par excellence pour les grands volumes."
+        },
+        {
+            q: "Quel climat accélère le vieillissement d'un rhum ?",
+            options: ["Tropical chaud et humide", "Sec et froid", "Alpin"],
+            correct: 0,
+            points: 1,
+            explanation: "La chaleur dilate le bois et accélère les réactions chimiques."
+        },
+        {
+            q: "Un vieillissement en climat tropical a pour effet :",
+            options: ["D’accélérer la maturation et les arômes boisés", "De neutraliser le bois", "De réduire l'alcool drastiquement"],
+            correct: 0,
+            points: 2,
+            explanation: "La 'part des anges' est élevée, concentrant le rhum et extrayant le bois rapidement."
+        },
+        {
+            q: "Un rhum fini en fût de Pedro Ximénez aura souvent :",
+            options: ["Un profil sec et tannique", "Une texture saline", "Des notes liquoreuses, raisin sec et caramel"],
+            correct: 2,
+            points: 3,
+            explanation: "Le fût de ce vin doux lègue ses arômes sucrés et fruités au rhum."
+        },
+        {
+            q: "Quel est l’un des avantages de l’assemblage ?",
+            options: ["Créer un produit équilibré et complexe", "Augmenter la production sans distiller", "Réduire le sucre"],
+            correct: 0,
+            points: 1,
+            explanation: "L'assemblage permet d'harmoniser les profils et d'assurer la constance."
+        },
+        {
+            q: "Un rhum 'mono-fût' (Single Cask) :",
+            options: ["Est un assemblage de 3 cuvées", "Vient d’un unique fût", "Est un rhum brut sans distillation"],
+            correct: 1,
+            points: 2,
+            explanation: "Comme son nom l'indique, il provient d'une seule barrique spécifique."
+        },
+        {
+            q: "La méthode Solera permet :",
+            options: ["De produire un monocépage", "De filtrer via la canne", "Intégrer en continu vieux et jeunes rhums"],
+            correct: 2,
+            points: 3,
+            explanation: "C'est un système dynamique de mélange vertical pour homogénéiser les âges."
+        }
+    ];
 
-    let currentQuestionIndex = 0;
-    let score = 0;
-    const MAX_SCORE = 30; // Score max possible
-    
-    // Variables de temps
-    let startTime;
-    let timeTakenSeconds = 0;
-    let performanceIndex = 0; 
+    let currentQuestionIndex = 0;
+    let score = 0;
+    const MAX_SCORE = 30; // Score max possible
+    
+    // Variables de temps
+    let startTime;
+    let timeTakenSeconds = 0;
+    let performanceIndex = 0; 
 
-    // Éléments du DOM
-    const welcomeArea = document.getElementById("welcome-area");
-    const quizArea = document.getElementById("quiz-area");
-    const resultsArea = document.getElementById("results-area");
+    // Éléments du DOM
+    const welcomeArea = document.getElementById("welcome-area");
+    const quizArea = document.getElementById("quiz-area");
+    const resultsArea = document.getElementById("results-area");
 
-    const questionText = document.getElementById("question-text");
-    const optionsContainer = document.getElementById("options-container");
-    const pointsDisplay = document.getElementById("q-points");
-    const feedbackArea = document.getElementById("feedback-area");
-    const nextBtn = document.getElementById("next-btn");
-    
-    // Éléments de progression et d'image
-    const questionProgressLive = document.getElementById("question-progress-live"); 
-    const chronoLiveDisplay = document.getElementById("chrono-live");
-    const sendResultsBtn = document.getElementById("send-results-btn");
-    const distilleryImage = document.getElementById("distillery-image-placeholder");
+    const questionText = document.getElementById("question-text");
+    const optionsContainer = document.getElementById("options-container");
+    const pointsDisplay = document.getElementById("q-points");
+    const feedbackArea = document.getElementById("feedback-area");
+    const nextBtn = document.getElementById("next-btn");
+    
+    // Éléments de progression et d'image
+    const questionProgressLive = document.getElementById("question-progress-live"); 
+    const chronoLiveDisplay = document.getElementById("chrono-live");
+    const sendResultsBtn = document.getElementById("send-results-btn");
+    const distilleryImage = document.getElementById("distillery-image-placeholder");
 
-    // Chargement de l'image de la distillerie au démarrage
-    distilleryImage.src = DISTILLERY_IMAGE_URL;
-    distilleryImage.onerror = function() {
-        // Fallback si l'image GitHub ne charge pas
-        this.src = "https://placehold.co/600x250/c0392b/ffffff?text=Erreur+de+chargement+Image+GitHub";
-        console.error("L'image de la distillerie n'a pas pu être chargée. Vérifiez l'URL brute (Raw) GitHub.");
-    };
-
-
-    /**
-     * Met à jour le chronomètre affiché.
-     */
-    function updateChrono() {
-        const currentTime = new Date();
-        timeTakenSeconds = Math.round((currentTime - startTime) / 1000); 
-        const minutes = String(Math.floor(timeTakenSeconds / 60)).padStart(2, '0');
-        const seconds = String(timeTakenSeconds % 60).padStart(2, '0');
-        chronoLiveDisplay.textContent = `${minutes}:${seconds}`;
-    }
-
-    /**
-     * Lance le quiz en cachant la page d'accueil et DÉMARRE LE CHRONOMÈTRE.
-     */
-    function startQuiz() {
-        welcomeArea.style.display = "none";
-        quizArea.style.display = "block";
-        startTime = new Date(); // Démarrage du chronomètre
-        chronoInterval = setInterval(updateChrono, 1000); // Mise à jour toutes les secondes
-        loadQuestion();
-    }
-
-    function loadQuestion() {
-        const currentData = quizData[currentQuestionIndex];
-        
-        questionText.textContent = currentData.q;
-        pointsDisplay.textContent = currentData.points + (currentData.points > 1 ? " Points" : " Point");
-        
-        // MISE À JOUR DU NUMÉRO DE QUESTION
-        questionProgressLive.textContent = `Question ${currentQuestionIndex + 1} / ${quizData.length}`;
-        
-        optionsContainer.innerHTML = "";
-        feedbackArea.style.display = "none";
-        nextBtn.style.display = "none";
-
-        currentData.options.forEach((opt, index) => {
-            const btn = document.createElement("button");
-            btn.className = "option-btn";
-            btn.textContent = opt;
-            btn.onclick = () => checkAnswer(index, btn);
-            optionsContainer.appendChild(btn);
-        });
-    }
-
-    function checkAnswer(selectedIndex, btnElement) {
-        const currentData = quizData[currentQuestionIndex];
-        const buttons = optionsContainer.querySelectorAll(".option-btn");
-        
-        // Désactiver tous les boutons
-        buttons.forEach(btn => btn.disabled = true);
-
-        if (selectedIndex === currentData.correct) {
-            btnElement.classList.add("correct");
-            score += currentData.points;
-            feedbackArea.innerHTML = `<strong>Correct !</strong> <br>${currentData.explanation}`;
-            feedbackArea.style.borderLeft = "5px solid var(--correct)";
-        } else {
-            btnElement.classList.add("wrong");
-            buttons[currentData.correct].classList.add("correct");
-            feedbackArea.innerHTML = `<strong>Incorrect.</strong> La bonne réponse était : <em>${currentData.options[currentData.correct]}</em><br>${currentData.explanation}`;
-            feedbackArea.style.borderLeft = "5px solid var(--wrong)";
-        }
-
-        feedbackArea.style.display = "block";
-        nextBtn.style.display = "block";
-        
-        if (currentQuestionIndex === quizData.length - 1) {
-            nextBtn.textContent = "Voir les résultats";
-        }
-    }
-
-    function nextQuestion() {
-        currentQuestionIndex++;
-        if (currentQuestionIndex < quizData.length) {
-            loadQuestion();
-        } else {
-            showResults();
-        }
-    }
+    // Chargement de l'image de la distillerie au démarrage
+    distilleryImage.src = DISTILLERY_IMAGE_URL;
+    distilleryImage.onerror = function() {
+        // Fallback si l'image GitHub ne charge pas
+        this.src = "https://placehold.co/600x250/c0392b/ffffff?text=Erreur+de+chargement+Image+GitHub";
+        console.error("L'image de la distillerie n'a pas pu être chargée. Vérifiez l'URL brute (Raw) GitHub.");
+    };
 
 
-    /**
-     * Affiche les résultats, calcule le temps et l'Index de Performance
-     */
-    function showResults() {
-        clearInterval(chronoInterval); // Arrêter le chronomètre
-        quizArea.style.display = "none";
-        resultsArea.style.display = "block";
-        
-        // On masque l'affichage des résultats finaux en attendant que le pseudo soit renseigné
-        document.getElementById("final-results-display").style.display = "none";
-        
-        // --- 1. Calcul du temps écoulé ---
-        const minutes = Math.floor(timeTakenSeconds / 60);
-        const seconds = timeTakenSeconds % 60;
-        const timeDisplay = `${minutes} min ${seconds} sec`;
+    /**
+     * Met à jour le chronomètre affiché.
+     */
+    function updateChrono() {
+        const currentTime = new Date();
+        timeTakenSeconds = Math.round((currentTime - startTime) / 1000); 
+        const minutes = String(Math.floor(timeTakenSeconds / 60)).padStart(2, '0');
+        const seconds = String(timeTakenSeconds % 60).padStart(2, '0');
+        chronoLiveDisplay.textContent = `${minutes}:${seconds}`;
+    }
 
-        // --- 2. Calcul du Score Pondéré (Index de Performance) ---
-        const rawPercentage = (score / MAX_SCORE) * 100;
-        
-        const TARGET_TIME_SECONDS = 120; // Temps cible: 2 minutes (120 secondes)
-        
-        let timeFactor = 1;
-        if (timeTakenSeconds > TARGET_TIME_SECONDS) {
-            // Malus : 0.1% de malus par seconde au-delà du temps cible
-            timeFactor = 1 - ((timeTakenSeconds - TARGET_TIME_SECONDS) * 0.001);
-            timeFactor = Math.max(0.5, timeFactor); // Limite du malus à 50%
-        }
+    /**
+     * Lance le quiz en cachant la page d'accueil et DÉMARRE LE CHRONOMÈTRE.
+     */
+    function startQuiz() {
+        welcomeArea.style.display = "none";
+        quizArea.style.display = "block";
+        startTime = new Date(); // Démarrage du chronomètre
+        chronoInterval = setInterval(updateChrono, 1000); // Mise à jour toutes les secondes
+        loadQuestion();
+    }
 
-        // On stocke le résultat dans la variable globale pour l'envoi
-        performanceIndex = Math.round(rawPercentage * timeFactor);
-        performanceIndex = Math.max(0, Math.min(100, performanceIndex));
+    function loadQuestion() {
+        const currentData = quizData[currentQuestionIndex];
+        
+        questionText.textContent = currentData.q;
+        pointsDisplay.textContent = currentData.points + (currentData.points > 1 ? " Points" : " Point");
+        
+        // MISE À JOUR DU NUMÉRO DE QUESTION
+        questionProgressLive.textContent = `Question ${currentQuestionIndex + 1} / ${quizData.length}`;
+        
+        optionsContainer.innerHTML = "";
+        feedbackArea.style.display = "none";
+        nextBtn.style.display = "none";
+
+        currentData.options.forEach((opt, index) => {
+            const btn = document.createElement("button");
+            btn.className = "option-btn";
+            btn.textContent = opt;
+            btn.onclick = () => checkAnswer(index, btn);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selectedIndex, btnElement) {
+        const currentData = quizData[currentQuestionIndex];
+        const buttons = optionsContainer.querySelectorAll(".option-btn");
+        
+        // Désactiver tous les boutons
+        buttons.forEach(btn => btn.disabled = true);
+
+        if (selectedIndex === currentData.correct) {
+            btnElement.classList.add("correct");
+            score += currentData.points;
+            feedbackArea.innerHTML = `<strong>Correct !</strong> <br>${currentData.explanation}`;
+            feedbackArea.style.borderLeft = "5px solid var(--correct)";
+        } else {
+            btnElement.classList.add("wrong");
+            buttons[currentData.correct].classList.add("correct");
+            feedbackArea.innerHTML = `<strong>Incorrect.</strong> La bonne réponse était : <em>${currentData.options[currentData.correct]}</em><br>${currentData.explanation}`;
+            feedbackArea.style.borderLeft = "5px solid var(--wrong)";
+        }
+
+        feedbackArea.style.display = "block";
+        nextBtn.style.display = "block";
+        
+        if (currentQuestionIndex === quizData.length - 1) {
+            nextBtn.textContent = "Voir les résultats";
+        }
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < quizData.length) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
 
 
-        // --- 3. Mise à jour des valeurs de l'écran de résultats ---
-        document.getElementById("final-score-val").textContent = performanceIndex + "%"; 
-        
-        // Afficher le score brut (X/30)
-        document.getElementById("raw-score-display").textContent = `Score brut : ${score} / ${MAX_SCORE} Points`;
+    /**
+     * Affiche les résultats, calcule le temps et l'Index de Performance
+     */
+    function showResults() {
+        clearInterval(chronoInterval); // Arrêter le chronomètre
+        quizArea.style.display = "none";
+        resultsArea.style.display = "block";
+        
+        // On masque l'affichage des résultats finaux en attendant que le pseudo soit renseigné
+        document.getElementById("final-results-display").style.display = "none";
+        
+        // --- 1. Calcul du temps écoulé ---
+        const minutes = Math.floor(timeTakenSeconds / 60);
+        const seconds = timeTakenSeconds % 60;
+        const timeDisplay = `${minutes} min ${seconds} sec`;
 
-        document.getElementById("time-taken-display").textContent = `Durée totale : ${timeDisplay}`;
+        // --- 2. Calcul du Score Pondéré (Index de Performance) ---
+        const rawPercentage = (score / MAX_SCORE) * 100;
+        
+        const TARGET_TIME_SECONDS = 120; // Temps cible: 2 minutes (120 secondes)
+        
+        let timeFactor = 1;
+        if (timeTakenSeconds > TARGET_TIME_SECONDS) {
+            // Malus : 0.1% de malus par seconde au-delà du temps cible
+            timeFactor = 1 - ((timeTakenSeconds - TARGET_TIME_SECONDS) * 0.001);
+            timeFactor = Math.max(0.5, timeFactor); // Limite du malus à 50%
+        }
+
+        // On stocke le résultat dans la variable globale pour l'envoi
+        performanceIndex = Math.round(rawPercentage * timeFactor);
+        performanceIndex = Math.max(0, Math.min(100, performanceIndex));
 
 
-        const msg = document.getElementById("final-message");
-        if (performanceIndex === 100) {
-            msg.textContent = "Félicitations ! Vous êtes un Maître du Rhum avec une rapidité impressionnante ! 🥃";
-        } else if (performanceIndex >= 75) {
-            msg.textContent = "Index de Performance Excellent ! Votre connaissance et votre rapidité sont au top.";
-        } else if (performanceIndex >= 35) {
-            msg.textContent = "Index Correct. Vous avez de bonnes bases, mais tentez d'être plus rapide la prochaine fois !";
-        } else {
-            msg.textContent = "C'est un début. Accélérez le rythme !";
-        }
-        
-        // Initialiser le statut d'envoi
-        document.getElementById('send-status').textContent = "Statut : Prêt à envoyer.";
-    }
-    
-    // -------------------------------------------------------------------
-    // FONCTION POUR ENVOYER LES RÉSULTATS (Avec Exponential Backoff)
-    // -------------------------------------------------------------------
-    async function sendResult(pseudo) {
-        if (resultSent) return; 
+        // --- 3. Mise à jour des valeurs de l'écran de résultats ---
+        document.getElementById("final-score-val").textContent = performanceIndex + "%"; 
+        
+        // Afficher le score brut (X/30)
+        document.getElementById("raw-score-display").textContent = `Score brut : ${score} / ${MAX_SCORE} Points`;
 
-        document.getElementById('send-status').textContent = "Envoi des résultats en cours...";
-        
-        // Afficher d'abord les résultats calculés si ce n'est pas fait
-        document.getElementById("final-results-display").style.display = "block";
+        document.getElementById("time-taken-display").textContent = `Durée totale : ${timeDisplay}`;
 
-        const dataToSend = {
-            pseudo: pseudo,
-            score: score,                  
-            time: timeTakenSeconds,        
-            performanceIndex: performanceIndex 
-        };
-        
-        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-        const maxRetries = 3;
-        let attempt = 0;
-        let success = false;
 
-        while (attempt < maxRetries && !success) {
-            try {
-                // Tentative d'envoi à Google Apps Script
-                const response = await fetch(GAS_URL, {
-                    method: 'POST',
-                    mode: 'no-cors', // Nécessaire pour les appels cross-origin simples
-                    cache: 'no-cache',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(dataToSend)
-                });
+        const msg = document.getElementById("final-message");
+        if (performanceIndex === 100) {
+            msg.textContent = "Félicitations ! Vous êtes un Maître du Rhum avec une rapidité impressionnante ! 🥃";
+        } else if (performanceIndex >= 75) {
+            msg.textContent = "Index de Performance Excellent ! Votre connaissance et votre rapidité sont au top.";
+        } else if (performanceIndex >= 35) {
+            msg.textContent = "Index Correct. Vous avez de bonnes bases, mais tentez d'être plus rapide la prochaine fois !";
+        } else {
+            msg.textContent = "C'est un début. Accélérez le rythme !";
+        }
+        
+        // Initialiser le statut d'envoi
+        document.getElementById('send-status').textContent = "Statut : Prêt à envoyer.";
+    }
+    
+    // -------------------------------------------------------------------
+    // FONCTION POUR ENVOYER LES RÉSULTATS (Avec Exponential Backoff)
+    // -------------------------------------------------------------------
+    async function sendResult(pseudo) {
+        if (resultSent) return; 
 
-                // Si le fetch réussit sans erreur réseau (même si la réponse est opaque), on considère que l'envoi a été tenté.
-                success = true;
-                resultSent = true;
-                document.getElementById('send-status').textContent = "✅ Résultat enregistré !";
-                sendResultsBtn.disabled = true; // Désactiver le bouton après l'envoi
+        document.getElementById('send-status').textContent = "Envoi des résultats en cours...";
+        
+        // Afficher d'abord les résultats calculés si ce n'est pas fait
+        document.getElementById("final-results-display").style.display = "block";
 
-            } catch (error) {
-                attempt++;
-                if (attempt < maxRetries) {
-                    const waitTime = Math.pow(2, attempt) * 1000; 
-                    // Pas de log d'erreur ici pour l'exponential backoff (consigne)
-                    await delay(waitTime);
-                } else {
-                    console.error("Erreur lors de l'envoi des données à Google Sheets (après plusieurs tentatives):", error);
-                    document.getElementById('send-status').textContent = "❌ Échec de l'enregistrement. Vérifiez l'URL et les logs du script.";
-                    resultSent = false;
-                }
-            }
-        }
-    }
+        const dataToSend = {
+            pseudo: pseudo,
+            score: score,                  
+            time: timeTakenSeconds,        
+            performanceIndex: performanceIndex 
+        };
+        
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+        const maxRetries = 3;
+        let attempt = 0;
+        let success = false;
 
-    // -------------------------------------------------------------------
-    // GESTION DE LA SAISIE DU PSEUDO (Afficher le bouton d'envoi)
-    // -------------------------------------------------------------------
+        while (attempt < maxRetries && !success) {
+            try {
+                // Tentative d'envoi à Google Apps Script
+                const response = await fetch(GAS_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Nécessaire pour les appels cross-origin simples
+                    cache: 'no-cache',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dataToSend)
+                });
 
-    function handlePseudoInput(pseudoValue) {
-        const pseudoTrimmed = pseudoValue.trim();
-        
-        // Afficher ou masquer le bouton d'envoi en fonction de la saisie
-        if (pseudoTrimmed.length > 0) {
-            sendResultsBtn.style.display = "block";
-        } else {
-            sendResultsBtn.style.display = "none";
-        }
-        
-        // Si le pseudo change APRÈS l'envoi initial, on permet de renvoyer (optionnel)
-        if (resultSent) {
-            resultSent = false;
-            document.getElementById('send-status').textContent = "Statut : Prêt à envoyer de nouveau.";
-            sendResultsBtn.disabled = false;
-        }
-    }
-    
-    // -------------------------------------------------------------------
-    // GESTION DU CLIC SUR LE BOUTON D'ENVOI
-    // -------------------------------------------------------------------
-    
-    function sendResultFromButton() {
-        const pseudoInput = document.getElementById('pseudo-input');
-        const pseudo = pseudoInput.value.trim();
+                // Si le fetch réussit sans erreur réseau (même si la réponse est opaque), on considère que l'envoi a été tenté.
+                success = true;
+                resultSent = true;
+                document.getElementById('send-status').textContent = "✅ Résultat enregistré !";
+                sendResultsBtn.disabled = true; // Désactiver le bouton après l'envoi
 
-        if (pseudo.length > 0) {
-            sendResult(pseudo);
-        } else {
-            document.getElementById('send-status').textContent = "Veuillez entrer un pseudo valide.";
-            pseudoInput.focus();
-        }
-    }
+            } catch (error) {
+                attempt++;
+                if (attempt < maxRetries) {
+                    const waitTime = Math.pow(2, attempt) * 1000; 
+                    // Pas de log d'erreur ici pour l'exponential backoff (consigne)
+                    await delay(waitTime);
+                } else {
+                    console.error("Erreur lors de l'envoi des données à Google Sheets (après plusieurs tentatives):", error);
+                    document.getElementById('send-status').textContent = "❌ Échec de l'enregistrement. Vérifiez l'URL et les logs du script.";
+                    resultSent = false;
+                }
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------
+    // GESTION DE LA SAISIE DU PSEUDO (Afficher le bouton d'envoi)
+    // -------------------------------------------------------------------
+
+    function handlePseudoInput(pseudoValue) {
+        const pseudoTrimmed = pseudoValue.trim();
+        
+        // Afficher ou masquer le bouton d'envoi en fonction de la saisie
+        if (pseudoTrimmed.length > 0) {
+            sendResultsBtn.style.display = "block";
+        } else {
+            sendResultsBtn.style.display = "none";
+        }
+        
+        // Si le pseudo change APRÈS l'envoi initial, on permet de renvoyer (optionnel)
+        if (resultSent) {
+            resultSent = false;
+            document.getElementById('send-status').textContent = "Statut : Prêt à envoyer de nouveau.";
+            sendResultsBtn.disabled = false;
+        }
+    }
+    
+    // -------------------------------------------------------------------
+    // GESTION DU CLIC SUR LE BOUTON D'ENVOI
+    // -------------------------------------------------------------------
+    
+    function sendResultFromButton() {
+        const pseudoInput = document.getElementById('pseudo-input');
+        const pseudo = pseudoInput.value.trim();
+
+        if (pseudo.length > 0) {
+            sendResult(pseudo);
+        } else {
+            document.getElementById('send-status').textContent = "Veuillez entrer un pseudo valide.";
+            pseudoInput.focus();
+        }
+    }
 </script>
 
 </body>
 </html>
-
