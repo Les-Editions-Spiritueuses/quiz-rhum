@@ -368,23 +368,6 @@
         .question-card {
             margin-bottom: 24px;
             position: relative;
-            padding-top: 20px;
-        }
-
-        /* Numéro 01/02/03 — décoration en filigrane derrière la question */
-        .question-card::before {
-            content: attr(data-q-number);
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: 'Lora', Georgia, serif;
-            font-style: italic;
-            font-size: 64px;
-            color: var(--gold);
-            opacity: 0.35;
-            line-height: 1;
-            pointer-events: none;
         }
 
         .question-meta {
@@ -397,7 +380,7 @@
             letter-spacing: 2.5px;
             color: var(--gold);
             text-transform: uppercase;
-            margin: 70px 0 16px;
+            margin: 0 0 16px;
         }
 
         .question-meta span {
@@ -894,20 +877,15 @@
                 font-size: 11px;
             }
 
-            /* === Numéro filigrane en absolu (sort du flux) === */
+            /* === Question card compacte === */
             .question-card {
                 padding-top: 0;
                 margin-bottom: 16px;
             }
-            .question-card::before {
-                font-size: 44px;
-                top: -4px;
-                opacity: 0.25;
-            }
 
             /* === Espacements verticaux compactés === */
             .question-meta {
-                margin: 38px 0 10px;
+                margin: 0 0 10px;
                 font-size: 9px;
                 gap: 12px;
             }
@@ -1139,7 +1117,7 @@
             </div>
         </div>
 
-        <div class="question-card" id="question-card" data-q-number="01">
+        <div class="question-card" id="question-card">
             <div class="question-meta">
                 <span id="q-difficulty">Difficulté</span>
                 <span id="q-points">Points</span>
@@ -1380,9 +1358,6 @@
 
         questionText.textContent = currentData.q;
         pointsDisplay.textContent = currentData.points + (currentData.points > 1 ? " Points" : " Point");
-
-        // Numéro de question affiché en filigrane (01, 02, 03...)
-        questionCard.setAttribute("data-q-number", String(currentQuestionIndex + 1).padStart(2, '0'));
 
         questionProgressLive.textContent = `Question ${currentQuestionIndex + 1} / ${quizData.length}`;
 
